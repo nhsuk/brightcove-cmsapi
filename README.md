@@ -20,16 +20,31 @@ Or install it yourself as:
 
 ## Usage examples
 
-** Get a list of available videos
+** Get a list of available videos in account **
 
 ```ruby
 Brightcove::CMSAPI.default_api.get('videos')
 ```
 
-** Get a list of all available videos in a folder
+Calling `.get` uses the default API settings and simply appends the argument to the API call like this:
+
+`https://cms.api.brightcove.com/v1/accounts/:account_id/videos`
+
+The API defaults are described in [Brightcove's documentation](https://brightcovelearning.github.io/Brightcove-API-References/cms-api/v1/doc/index.html).
+To get more than the default 20 results you could call `.get('videos?limit=100')`, however there is a hard limit at 100 results that you can not exceed.
+To get around this limit you can use the `.get_all` method as displayed below, this will paginate through the results and return a parsed set of all
+a particular resource.
+
+** Get a list of all available videos **
 
 ```ruby
-Brightcove::CMSAPI.default_api.get_all('playlist/PLAYLIST_ID_HERE', 'video')
+Brightcove::CMSAPI.default_api.get_all('video')
+```
+
+** Get a list of all available videos in a folder **
+
+```ruby
+Brightcove::CMSAPI.default_api.get_all('folder/:folder_id', 'video')
 ```
 
 ## Development

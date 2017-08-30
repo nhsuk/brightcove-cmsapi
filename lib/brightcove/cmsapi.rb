@@ -1,5 +1,4 @@
 require "http"
-require "pry"
 
 module Brightcove
   class Cmsapi
@@ -33,12 +32,18 @@ module Brightcove
       end
     end
 
-    def get_all(path, resource)
-      count = get(path).parse.fetch("#{resource}_count")
+    def get_all(path="", resource)
+      if path.empty?
+        count = get("counts/#{resource}s").parse.fetch("count")
+        resource_path = "#{resource}s"
+      else
+        count = get(path).parse.fetch("#{resource}_count")
+        resource_path = "#{path}/#{resource}s"
+      end
       offset = 0
       resources = []
       while offset < count do
-        resources.concat(get("#{path}/#{resource}s?limit=100&offset=#{offset}").parse)
+        resources.concat(get("#{resource_path}?limit=100&offset=#{offset}").parse)
         offset = offset + 100
       end
       resources
