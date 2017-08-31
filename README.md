@@ -18,11 +18,37 @@ Or install it yourself as:
 
     $ gem install brightcove-cmsapi
 
+## Setup 
+
+To use this library you will require a client ID and secret, as well as your brightcove account's ID.
+You can find instructions of obtaining these credentials in the [Brightcove docs](https://support.brightcove.com/managing-api-authentication-credentials).
+
+** Setup a basic client **
+
+```ruby
+  @client = Brightcove::Cmsapi.new(
+    account_id: "my_account_id",
+    client_id: "my_client_id",
+    client_secret: "my_client_secret")
+```
+
+One alternative to this setup that can save you time and boilerplate code wold be to call the `.default_api` method.
+This assumes you have your credentials and account ID set as environment variables `BRIGHTCOVE_ACCOUNT_ID` `BRIGHTCOVE_CLIENT_ID` `BRIGHTCOVE_CLIENT_SECRET`.
+
+** Alternatively: don't setup the client each time (RECOMMENDED USAGE) **
+
+```ruby
+Brightcove::CMSAPI.default_api.get('videos')
+```
+
 ## Usage examples
 
 ** Get a list of available videos in account **
 
 ```ruby
+@client.get('videos')
+
+# or use the default_api setup:
 Brightcove::CMSAPI.default_api.get('videos')
 ```
 
