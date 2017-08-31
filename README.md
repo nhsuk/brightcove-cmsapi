@@ -1,5 +1,7 @@
 # Brightcove::Cmsapi
 
+[![Build Status](https://travis-ci.org/nhsuk/brightcove-cmsapi.svg?branch=master)](https://travis-ci.org/nhsuk/brightcove-cmsapi)
+
 This gem wraps Brightcove's [CMS API](https://brightcovelearning.github.io/Brightcove-API-References/cms-api/v1/doc/index.html).
 
 ## Installation
@@ -38,39 +40,48 @@ This assumes you have your credentials and account ID set as environment variabl
 ** Alternatively: don't setup the client each time (RECOMMENDED USAGE) **
 
 ```ruby
-Brightcove::CMSAPI.default_api.get('videos')
+Brightcove::Cmsapi.default_api.get('videos')
 ```
 
 ## Usage examples
 
-** Get a list of available videos in account **
+** Get the available videos in account (by default the first 20) **
 
 ```ruby
 @client.get('videos')
 
 # or use the default_api setup:
-Brightcove::CMSAPI.default_api.get('videos')
+Brightcove::Cmsapi.default_api.get('videos')
 ```
 
 Calling `.get` uses the default API settings and simply appends the argument to the API call like this:
 
 `https://cms.api.brightcove.com/v1/accounts/:account_id/videos`
 
+The result will be a `HTTP::Response` object (the gem uses the [http.rb gem](https://github.com/httprb/http)).
+To parse the JSON in this response into a Ruby hash call `.parse`.
+
 The API defaults are described in [Brightcove's documentation](https://brightcovelearning.github.io/Brightcove-API-References/cms-api/v1/doc/index.html).
 To get more than the default 20 results you could call `.get('videos?limit=100')`, however there is a hard limit at 100 results that you can not exceed.
 To get around this limit you can use the `.get_all` method as displayed below, this will paginate through the results and return a parsed set of all
 a particular resource.
 
-** Get a list of all available videos **
+** Get all available videos **
 
 ```ruby
-Brightcove::CMSAPI.default_api.get_all('video')
+Brightcove::Cmsapi.default_api.get_all('video')
 ```
 
-** Get a list of all available videos in a folder **
+** Get all available videos in a folder **
 
 ```ruby
-Brightcove::CMSAPI.default_api.get_all('folder/:folder_id', 'video')
+Brightcove::Cmsapi.default_api.get_all('folder/:folder_id', 'video')
+```
+
+** Get all available videos in a folder as an array of ruby hashes **
+
+```ruby
+Brightcove::Cmsapi.default_api.get_all('folder/:folder_id', 'video').parse
 ```
 
 ## Development
