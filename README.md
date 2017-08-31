@@ -32,7 +32,7 @@ You can find instructions of obtaining these credentials in the [Brightcove docs
     client_secret: "my_client_secret")
 ```
 
-One alternative to this setup that can save you time and boilerplate code wold be to call the `.default_api` method.
+One alternative to this setup that can save you time and boilerplate code would be to call the `.default_api` method.
 This assumes you have your credentials and account ID set as environment variables `BRIGHTCOVE_ACCOUNT_ID` `BRIGHTCOVE_CLIENT_ID` `BRIGHTCOVE_CLIENT_SECRET`.
 
 ** Alternatively: don't setup the client each time (RECOMMENDED USAGE) **
