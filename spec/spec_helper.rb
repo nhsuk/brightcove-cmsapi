@@ -1,6 +1,9 @@
 require "bundler/setup"
 require "brightcove/cmsapi"
 require "webmock/rspec"
+require "timecop"
+
+require_relative "support/request_stubs"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
