@@ -1,11 +1,10 @@
 # coding: utf-8
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require "brightcove/cmsapi"
 
 Gem::Specification.new do |spec|
   spec.name          = "brightcove-cmsapi"
-  spec.version       = Brightcove::Cmsapi::VERSION
+  spec.version       = "0.1.0"
   spec.authors       = ["Daniel King"]
   spec.email         = ["daniel.king5@nhs.net"]
 

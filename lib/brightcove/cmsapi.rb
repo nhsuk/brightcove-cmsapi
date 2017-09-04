@@ -2,7 +2,6 @@ require "http"
 
 module Brightcove
   class Cmsapi
-    VERSION = "0.1.0"
     OAUTH_ENDPOINT = "https://oauth.brightcove.com/v4/access_token"
     API_ROOT = "https://cms.api.brightcove.com/v1/accounts"
 
