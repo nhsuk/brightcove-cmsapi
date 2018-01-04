@@ -4,12 +4,12 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
   spec.name          = "brightcove-cmsapi"
-  spec.version       = "0.1.0"
+  spec.version       = "0.2.0"
   spec.authors       = ["Daniel King"]
   spec.email         = ["daniel.king5@nhs.net"]
 
   spec.summary       = %q{A simple wrapper around Brightcove's CMS API}
-  spec.homepage      = "https://nhs.uk"
+  spec.homepage      = "https://github.com/nhsuk/brightcove-cmsapi"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0").reject do |f|
