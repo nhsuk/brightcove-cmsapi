@@ -1,4 +1,5 @@
 require "http"
+require_relative "errors"
 
 module Brightcove
   class Cmsapi
@@ -13,21 +14,37 @@ module Brightcove
     end
 
     def self.default_api
+      account_id = ENV['BRIGHTCOVE_ACCOUNT_ID']
+      client_id = ENV['BRIGHTCOVE_CLIENT_ID']
+      client_secret = ENV['BRIGHTCOVE_CLIENT_SECRET']
+
+      if [account_id, client_id, client_secret].any? { |c| c.to_s.empty? }
+        raise AuthenticationError, 'Missing Brightcove API credentials'
+      end
+
       @default_api ||= new(
-        account_id: ENV['BRIGHTCOVE_ACCOUNT_ID'],
-        client_id: ENV['BRIGHTCOVE_CLIENT_ID'],
-        client_secret: ENV['BRIGHTCOVE_CLIENT_SECRET'])
+        account_id: account_id,
+        client_id: client_id,
+        client_secret: client_secret)
     end
 
     def get(path)
       set_token if @token_expires < Time.now
       response = HTTP.auth("Bearer #{@token}").get("#{@base_url}/#{path}")
 
-      if response.code == 401 # Unauthorized, token expired
-        set_token
-        HTTP.auth("Bearer #{@token}").get("#{@base_url}/#{path}")
-      else
+      case response.code
+      when 200 # OK
         response
+      when 401 # Unauthorized, token expired
+        set_token
+        response = HTTP.auth("Bearer #{@token}").get("#{@base_url}/#{path}")
+
+        # if a fresh token still returns 401 the request must be unauthorized
+        raise_account_error if response.code == 401
+
+        response
+      else
+        raise CmsapiError, response.to_s
       end
     end
 
@@ -53,9 +70,19 @@ module Brightcove
     def set_token
       response = HTTP.basic_auth(user: @client_id, pass: @client_secret)
                      .post(OAUTH_ENDPOINT,
-                           form: { grant_type: "client_credentials" }).parse
-      @token = response.fetch("access_token")
-      @token_expires = Time.now + response.fetch("expires_in")
+                           form: { grant_type: "client_credentials" })
+      token_response = response.parse
+
+      if response.status == 200
+        @token = token_response.fetch("access_token")
+        @token_expires = Time.now + token_response.fetch("expires_in")
+      else
+        raise AuthenticationError, token_response.fetch("error_description")
+      end
+    end
+
+    def raise_account_error
+      raise AuthenticationError, 'Token valid but not for the given account_id'
     end
   end
 end

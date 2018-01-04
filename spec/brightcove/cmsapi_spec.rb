@@ -133,4 +133,25 @@ RSpec.describe Brightcove::Cmsapi do
       end
     end
   end
+
+  describe ".default_api" do
+    context "with API credentials present" do
+      before do
+        allow(ENV).to receive(:[]).with("BRIGHTCOVE_ACCOUNT_ID").and_return("my_account_id")
+        allow(ENV).to receive(:[]).with("BRIGHTCOVE_CLIENT_ID").and_return("my_client_id")
+        allow(ENV).to receive(:[]).with("BRIGHTCOVE_CLIENT_SECRET").and_return("my_client_secret")
+      end
+
+      it "returns a new Cmsapi object" do
+        expect(Brightcove::Cmsapi.default_api).to be_a Brightcove::Cmsapi
+      end
+    end
+
+    context "without API credentials present" do
+      it "raises and authentication error" do
+        expect { Brightcove::Cmsapi.default_api }.to raise_error Brightcove::AuthenticationError,
+          'Missing Brightcove API credentials'
+      end
+    end
+  end
 end
